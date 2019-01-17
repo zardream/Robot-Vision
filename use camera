@@ -1,0 +1,57 @@
+#include "iostream"
+
+using namespace std;
+
+#include "opencv2\opencv.hpp"
+
+using namespace cv;
+
+int main()
+
+{
+
+VideoCapture capture(0);
+
+if (!capture.isOpened())
+
+{
+
+cout << "未发现摄像头！" << endl;
+
+return -1;
+
+}//检测是否成功打开摄像头
+
+Mat frame;
+
+capture.set(CV_CAP_PROP_FOURCC, CV_FOURCC('M', 'J', 'P', 'G'));
+
+capture.set(CV_CAP_PROP_FPS, 30);
+
+capture.set(CV_CAP_PROP_FRAME_WIDTH, 1920);
+
+capture.set(CV_CAP_PROP_FRAME_HEIGHT, 1080);
+
+while (1)
+
+{
+
+capture >> frame;
+
+if (!capture.read(frame))//这个判断的必须的
+
+break;
+
+//中间可插入各种对图像的处理
+
+imshow("frame", frame);
+
+if (waitKey(30) >= 0)//刷新间隔30ms，按任意键退出
+
+break;
+
+}
+
+return 0;
+
+}//opencv2读取摄像头

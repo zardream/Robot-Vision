@@ -10,7 +10,7 @@ int main()
 
 {
 
-VideoCapture capture(0);
+VideoCapture capture(1);
 
 if (!capture.isOpened())
 

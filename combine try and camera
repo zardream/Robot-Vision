@@ -24,45 +24,43 @@ int main()
 	cv::namedWindow("Camera FPS");
 	double t = 0;
 
-	//打开第一个摄像头
+	VideoCapture capture(1);
 
-	VideoCapture cap(1);
-
-	if (!cap.isOpened())
+	if (!capture.isOpened())
 
 	{
 
 		cout << "未发现摄像头！" << endl;
 
-		return -1;
+
 
 	}//检测是否成功打开摄像头
 
 	Mat frame;
 
-	cap.set(CV_CAP_PROP_FOURCC, CV_FOURCC('M', 'J', 'P', 'G'));
+	capture.set(CV_CAP_PROP_FOURCC, CV_FOURCC('M', 'J', 'P', 'G'));
 
-	cap.set(CV_CAP_PROP_FPS, 30);
+	capture.set(CV_CAP_PROP_FPS, 30);
 
-	cap.set(CV_CAP_PROP_FRAME_WIDTH, 1920);
+	capture.set(CV_CAP_PROP_FRAME_WIDTH, 1920);
 
-	cap.set(CV_CAP_PROP_FRAME_HEIGHT, 1080);
+	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 1080);
+	capture >> frame;
 
 	while (1)
 
 	{
+		
 
-		cap >> frame;
-
-		if (!cap.read(frame))//这个判断的必须的
+		if (!capture.read(frame))//这个判断的必须的
 
 			break;
 
 		t = (double)cv::getTickCount();
 		if (cv::waitKey(50) == 30) { break; }
-		if (cap.isOpened())
+		if (capture.isOpened())
 		{
-			cap >> frame;
+			capture >> frame;
 			// getTickcount函数：返回从操作系统启动到当前所经过的毫秒数
 			// getTickFrequency函数：返回每秒的计时周期数
 			// t为该处代码执行所耗的时间,单位为秒,fps为其倒数
@@ -149,7 +147,7 @@ int main()
 
 			//中间可插入各种对图像的处理
 
-			//imshow("frame", frame);
+
 
 			if (waitKey(30) >= 0)//刷新间隔30ms，按任意键退出
 
@@ -157,7 +155,7 @@ int main()
 
 		}
 
-		return 0;
+		
 
-	}//opencv2读取摄像头
+	}
 }

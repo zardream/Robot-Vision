@@ -26,7 +26,7 @@ int main()
 
 	//打开第一个摄像头
 
-	VideoCapture cap(0);
+	VideoCapture cap(1);
 
 	//判断摄像头是否打开
 
@@ -116,7 +116,7 @@ int main()
 
 			morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);
 
-		
+
 
 
 			src = imgThresholded;
@@ -145,9 +145,16 @@ int main()
 			Mat drawing = Mat::zeros(matSrc.size(), CV_8UC1);
 			for (int i = 0; i < contours.size(); i++)
 			{
-				Scalar color = Scalar(255);
-				drawContours(drawing, contours, i, color, 2, 8, hierarchy, 0, Point());
-				circle(drawing, mc[i], 4, color, -1, 8, 0);
+				double area = contourArea(contours[i], true);
+				if (area < -200) {
+					Scalar color = Scalar(255);
+					drawContours(drawing, contours, i, color, 2, 8, hierarchy, 0, Point());
+					circle(drawing, mc[i], 4, color, -1, 8, 0);
+				}
+				else {
+					cout << "interfere" << endl;
+				}
+
 			}
 			imshow("outImage", drawing);
 

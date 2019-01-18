@@ -33,9 +33,10 @@ int main()
 	int HighV = 255;
 	Mat src = imread("red.jpg");
 	Mat srcConvert;
-	src.convertTo(srcConvert, src.type(), 1.2, 130);
+	Mat original;
+	src.convertTo(srcConvert, src.type(), 1, 130);
+	original = src;
 	src = srcConvert;
-	imshow("src", src);
 	imshow("srcConvert", srcConvert);
 	
 	Mat imgHSV;
@@ -53,7 +54,6 @@ int main()
 	morphologyEx(imgThresholded, imgThresholded, MORPH_OPEN, element);//形态学开，先对图像腐蚀再膨胀
 	morphologyEx(imgThresholded, imgThresholded, MORPH_CLOSE, element);//形态学闭，先膨胀再腐蚀
 	imshow("Thresholded Image", imgThresholded);
-	imshow("Original", src);
 
 
 
@@ -98,6 +98,7 @@ int main()
 			//利用外界椭圆的旋转角进行二次过滤
 			if ((ellipse[i].angle>150&&ellipse[i].angle<180)|| ellipse[i].angle>0&& ellipse[i].angle<30){
 
+
 				cout << ellipse[i].angle << endl;
 				cout << ellipse[i].center << endl;
 				cout << ellipse[i].size << endl;
@@ -105,6 +106,13 @@ int main()
 				double areaofELLIPSE = ellipse[i].size.height*ellipse[i].size.width*3.14;
 				double solidity = areaofOUTLINE / areaofELLIPSE;
 				cout << solidity << endl;
+				Mat imageROI;
+				Point2f vertices[4];
+				ellipse[i].points(vertices);
+				for (int i = 0; i < 4; i++)
+					line(original, vertices[i], vertices[(i + 1) % 4], Scalar(0, 255, 0));
+
+				//imageROI = original(Rect());
 
 				for (int j = 0; j <= 3; j++)
 				{
@@ -114,6 +122,9 @@ int main()
 				}
 			}
 		}
+		
+
+		
 
 
 
@@ -150,6 +161,7 @@ int main()
 
 
 	imshow("outImage", src);
+	imshow("original", original);
 	waitKey();
 	return 0;
 

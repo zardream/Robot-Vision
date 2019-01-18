@@ -2,6 +2,7 @@
 //
 
 
+#include"pch.h"
 #include<iostream>
 #include<opencv2/opencv.hpp>
 #include<math.h>
@@ -12,7 +13,12 @@
 
 using namespace cv;
 using namespace std;
-
+Point2f mid_point(Point2f a, Point2f b) {
+	Point2f res;
+	res.x = (a.x + b.x) / 2;
+	res.y = (a.y + b.y) / 2;
+	return res;
+}
 double distance(Point2f a, Point2f b)
 {
 	double res = 0;
@@ -30,7 +36,7 @@ int main()
 
 	int LowV = 221;
 	int HighV = 255;
-	Mat src = imread("C:/Users/x1c/Desktop/1.jpg");
+	Mat src = imread("C:/Users/zjy/Desktop/装甲板.jpg");
 	Mat imgHSV;
 	vector<Mat> hsvSplit;
 	cvtColor(src, imgHSV, COLOR_BGR2HSV);//将src转为HSV图imgHSV
@@ -82,15 +88,66 @@ int main()
 		rect.points(P);
 		double length = max(distance(P[0], P[3]), distance(P[0], P[1]));
 		double width = min(distance(P[0], P[3]), distance(P[0], P[1]));
-
 		if (length / width > 5.0) {
 			for (int j = 0; j <= 3; j++)
 			{
-
-				line(src, P[j], P[(j + 1) % 4], Scalar(0,0,255), 2);
-
+				line(src, P[j], P[(j + 1) % 4], Scalar(0, 0, 255), 2);	
 			}
+			Point2f MidPoint = mid_point(P[0], P[2]);
+			circle(src, MidPoint, 4, Scalar(0, 0, 255), -1, 8, 0);
+			Point2f upPoint,downPoint;
+			
+			if (distance(P[0], P[3]) > distance(P[0], P[1])) {
+				double slope = (P[0].y - P[3].y) / (P[0].x - P[3].x);
+				double diferenceX = abs(P[0].x - P[3].x);
+				double diferenceY = abs(P[0].y - P[3].y);
+				if (slope < 0) {
+					upPoint.x = MidPoint.x + diferenceX;
+					upPoint.y = MidPoint.y - diferenceY;
+					downPoint.x = MidPoint.x - diferenceX;
+					downPoint.y = MidPoint.y + diferenceY;
+					circle(src, upPoint, 4, Scalar(0, 0, 255), -1, 8, 0);
+					circle(src, downPoint, 4, Scalar(0, 0, 255), -1, 8, 0);
+					line(src,upPoint, downPoint, Scalar(0, 0, 255), 2);
+				}
+				if (slope >= 0) {
+					upPoint.x = MidPoint.x - diferenceX;
+					upPoint.y = MidPoint.y - diferenceY;
+					downPoint.x = MidPoint.x + diferenceX;
+					downPoint.y = MidPoint.y + diferenceY;
+					circle(src, upPoint, 4, Scalar(0, 0, 255), -1, 8, 0);
+					circle(src, downPoint, 4, Scalar(0, 0, 255), -1, 8, 0);
+					line(src, upPoint, downPoint, Scalar(0, 0, 255), 2);
+				}
+			}
+			else if(distance(P[0], P[3]) <= distance(P[0], P[1])) {
+				double slope = (P[0].y - P[1].y) / (P[0].x - P[1].x);
+				double diferenceX = (P[0].x - P[1].x);
+				double diferenceY = (P[0].y - P[1].y);
+				if (slope < 0) {
+					upPoint.x = MidPoint.x + diferenceX;
+					upPoint.y = MidPoint.y - diferenceY;
+					downPoint.x = MidPoint.x - diferenceX;
+					downPoint.y = MidPoint.y + diferenceY;
+					circle(src, upPoint, 4, Scalar(0, 0, 255), -1, 8, 0);
+					circle(src, downPoint, 4, Scalar(0, 0, 255), -1, 8, 0);
+					line(src, upPoint, downPoint, Scalar(0, 0, 255), 2);
+				}
+				if (slope >= 0) {
+					upPoint.x = MidPoint.x - diferenceX;
+					upPoint.y = MidPoint.y - diferenceY;
+					downPoint.x = MidPoint.x + diferenceX;
+					downPoint.y = MidPoint.y + diferenceY;
+					circle(src, upPoint, 4, Scalar(0, 0, 255), -1, 8, 0);
+					circle(src, downPoint, 4, Scalar(0, 0, 255), -1, 8, 0);
+					line(src, upPoint, downPoint, Scalar(0, 0, 255), 2);
+				}
+			}
+			
+
+			
 		}
+		
 	}
 
 	//int x0 = 0, y0 = 0, w0 = 0, h0 = 0, num = 0;

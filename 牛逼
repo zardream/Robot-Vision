@@ -2,7 +2,6 @@
 //
 
 
-#include"pch.h"
 #include<iostream>
 #include<opencv2/opencv.hpp>
 #include<math.h>
@@ -23,15 +22,15 @@ double distance(Point2f a, Point2f b)
 int main()
 {
 
-	int LowH = 30;
-	int HighH = 140;
+	int LowH = 0;
+	int HighH = 180;
 
-	int LowS = 160;
-	int HighS = 255;
+	int LowS = 0;
+	int HighS = 30;
 
-	int LowV = 220;
+	int LowV = 221;
 	int HighV = 255;
-	Mat src = imread("C:/Users/zjy/Desktop/装甲板.jpg");
+	Mat src = imread("C:/Users/x1c/Desktop/1.jpg");
 	Mat imgHSV;
 	vector<Mat> hsvSplit;
 	cvtColor(src, imgHSV, COLOR_BGR2HSV);//将src转为HSV图imgHSV
@@ -74,7 +73,7 @@ int main()
 		mc[i] = Point2f(mu[i].m10 / mu[i].m00, mu[i].m01 / mu[i].m00);
 	}*/
 	/// 绘制轮廓
-	
+
 	Mat drawing = Mat::zeros(matSrc.size(), CV_8UC1);
 	for (int i = 0; i < contours.size(); i++) {
 		drawContours(drawing, contours, i, Scalar(0, 0, 255), 2, 8);  //绘制轮廓
@@ -83,17 +82,17 @@ int main()
 		rect.points(P);
 		double length = max(distance(P[0], P[3]), distance(P[0], P[1]));
 		double width = min(distance(P[0], P[3]), distance(P[0], P[1]));
-		
+
 		if (length / width > 5.0) {
 			for (int j = 0; j <= 3; j++)
 			{
 
-				line(src, P[j], P[(j + 1) % 4], Scalar(255), 2);
+				line(src, P[j], P[(j + 1) % 4], Scalar(0,0,255), 2);
 
 			}
 		}
 	}
-	
+
 	//int x0 = 0, y0 = 0, w0 = 0, h0 = 0, num = 0;
 	//for (int i = 0; i < contours.size(); i++)
 	//{
@@ -132,25 +131,5 @@ int main()
 
 
 
-		
+
 }
-
-
-	
-
-
-
-
-
-
-
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
-
-// 入门提示: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件
